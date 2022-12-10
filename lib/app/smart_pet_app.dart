@@ -5,7 +5,9 @@ import 'package:smart_bet_system/blocs/auth/login_cubit/login_cubit.dart';
 import 'package:smart_bet_system/blocs/auth/signup_cubit/sign_up_cubit.dart';
 import 'package:smart_bet_system/presentation/resources/strings_manager.dart';
 import 'package:smart_bet_system/presentation/screens/auth/signin/signin.dart';
+import 'package:smart_bet_system/presentation/screens/home/home.dart';
 
+import '../data/services/local/cache/prefs.dart';
 import '../presentation/resources/theme_manager.dart';
 
 class SmartPetApp extends StatelessWidget {
@@ -29,15 +31,24 @@ class SmartPetApp extends StatelessWidget {
       ],
       child: MaterialApp(
         title: AppStrings.appName,
+        debugShowCheckedModeBanner: false,
         theme: getApplicationTheme(context),
         home: MultiBlocProvider(
           providers: [
             BlocProvider(create: (context) => LoginCubit()),
             BlocProvider(create: (context) => SignUpCubit()),
           ],
-          child: const SignInScreen(),
+          child: decideWhereToGo(),
         ),
       ),
     );
   }
+}
+
+Widget decideWhereToGo() {
+  bool isAuthenticated = PreferenceUtils.getBool(PrefsEnum.isAuthenticated);
+  if (isAuthenticated) {
+    return const HomeScreen();
+  }
+  return const SignInScreen();
 }

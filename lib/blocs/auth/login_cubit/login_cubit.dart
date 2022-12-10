@@ -7,6 +7,8 @@ import 'package:smart_bet_system/data/services/remote/auth/signin/login_response
 import 'package:smart_bet_system/data/services/remote/auth/signin/login_services.dart';
 import 'package:smart_bet_system/presentation/resources/strings_manager.dart';
 
+import '../../../data/services/local/cache/prefs.dart';
+
 part 'login_state.dart';
 
 class LoginCubit extends Cubit<LoginState> {
@@ -21,6 +23,7 @@ class LoginCubit extends Cubit<LoginState> {
       LoginResponse response =
           await loginServices.defaultLogin(email: email, password: password);
       user = response.user;
+      await cacheLogin();
       emit(LoginSuccess(response.message));
     } on FirebaseAuthException catch (error) {
       emit(LoginError(error.message));
@@ -34,7 +37,12 @@ class LoginCubit extends Cubit<LoginState> {
     }
   }
 
+  Future<void> cacheLogin() async {
+    await PreferenceUtils.setBool(PrefsEnum.isAuthenticated, true);
+  }
+
   Future<void> signOut() async {
     await loginServices.signOut();
+    await PreferenceUtils.setBool(PrefsEnum.isAuthenticated, false);
   }
 }

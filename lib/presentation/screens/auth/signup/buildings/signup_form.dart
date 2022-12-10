@@ -129,7 +129,11 @@ class _SignUpFormState extends State<SignUpForm> {
         if (state is SignUpSuccess) {
           Fluttertoast.showToast(
               msg: state.successMsg ?? AppStrings.createdSuccessfully);
-          BlocProvider.of<SignUpCubit>(context, listen: false).signOut();
+          BlocProvider.of<SignUpCubit>(context, listen: false)
+              .signOut()
+              .then((_) {
+            Navigator.of(context).pop();
+          });
         } else if (state is SignUpError) {
           Fluttertoast.showToast(
               msg: state.errorMsg ?? AppStrings.unknownError);
