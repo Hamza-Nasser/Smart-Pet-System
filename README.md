@@ -1,6 +1,6 @@
 # smart_bet_system
 
-A new Flutter project.
+Based on the client's request, the code for this feature has been designed with a scalable architecture, even though it is currently a simple showcase project
 
 ## Getting Started
 
